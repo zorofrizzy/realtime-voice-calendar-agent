@@ -1,0 +1,348 @@
+
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Voice Scheduler | Demo</title>
+<!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+	/* Header */
+    header { margin-bottom: 40px; }
+
+    .badge {
+      display: inline-flex;       /* Changed to flex for alignment */
+        align-items: center;
+        gap: 8px;                   /* Space between dot and text */
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+	  letter-spacing: -0.02em;
+      margin-bottom: 12px;
+	  background: -webkit-linear-gradient(45deg, #1f2937, #4f46e5);
+	-webkit-background-clip: text;
+    background-clip: text;
+	-webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+	/* Card */
+    .card {
+      background: var(--card-bg);
+	  backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 32px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      margin-bottom: 30px;
+	  transition: transform 0.3s ease;
+    }
+	.card:hover { transform: translateY(-5px); }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+	/* Steps */
+    .steps {
+      list-style: none;
+      margin-bottom: 30px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 16px;
+	  align-items: flex-start;
+    }
+
+    .step-number {
+      background: var(--primary);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+	  margin-top: 2px;
+    }
+
+    .step-text {
+      font-size: 0.95rem;
+	  color: var(--text-main);
+      line-height: 1.5;
+    }
+	.step-text strong { color: var(--primary); }
+
+	/* Button */
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 16px;
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      gap: 10px;
+      border: none;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+	  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+    }
+
+    #warmStatus {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .tech-stack {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Tech Pill & Status Dot */
+    .tech-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.6);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--success); /* This is #10b981 */
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .live-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--success); /* #10b981 */
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+    }
+
+        /* Secondary Button (for View Calendar) */
+    .btn-secondary {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 14px;
+      background: white;
+      color: var(--text-main);
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: none;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+      border-color: rgba(0, 0, 0, 0.15);
+      transform: translateY(-1px);
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <span class="badge"><span class="live-dot"></span> Live Demo</span>
+      <h1>Voice Scheduling Agent</h1>
+      <p class="subtitle">
+        Real-time AI voice assistant that schedules a Google Calendar event.
+      </p>
+    </header>
+
+    <div class="card">
+      <h3><i class="fa-solid fa-list-check"></i> How to Test</h3>
+      <ul class="steps">
+        <li class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-text">Click <strong>Start Voice Assistant</strong>.</div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-text">Allow microphone access.</div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-text">Say: <em>"Schedule a meeting tomorrow at 5 PM titled Project Sync."</em></div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">4</div>
+          <div class="step-text">Confirm the details.</div>
+        </li>
+        <li class="step-item">
+          <div class="step-number">5</div>
+          <div class="step-text">View Calendar (last button).</div>
+        </li>
+      </ul>
+
+      <button class="btn" id="startBtn">
+        <i class="fa-solid fa-microphone-lines"></i>
+        Start Voice Assistant
+      </button>
+
+    <a class="btn-secondary" 
+         href="https://calendar.google.com/calendar/embed?src=5d04a7fa75a1a7a72ce3f7e9e923055f7d4a12c2b4dc4e65c2b1caa5151f2ad7%40group.calendar.google.com&ctz=America%2FLos_Angeles" 
+         target="_blank" 
+         rel="noopener">
+        <i class="fa-solid fa-calendar-check"></i>
+        View Calendar
+      </a>
+
+      <p id="warmStatus">Warming backend service…</p>
+    </div>
+
+    <div class="tech-stack">
+      <div class="tech-pill">
+          <div class="status-dot"></div> Vapi AI
+        </div>
+        <div class="tech-pill">
+          <div class="status-dot"></div> FastAPI (Render)
+        </div>
+        <div class="tech-pill">
+          <div class="status-dot"></div> Google Calendar
+        </div>
+        <div class="tech-pill">
+          <div class="status-dot"></div> Vercel
+        </div>
+        <div class="tech-pill">
+          <div class="status-dot"></div> Grok 4 - Reasoning
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const VAPI_AGENT_URL = "https://vapi.ai?demo=true&shareKey=2aaf3172-f599-44b9-9702-69579ca67b39&assistantId=5a234ade-36a9-4f0b-98bf-b00bedc5417b";
+    const RENDER_HEALTH_URL = "https://realtime-voice-calendar-agent.onrender.com/health";
+
+    const btn = document.getElementById("startBtn");
+    const warmStatus = document.getElementById("warmStatus");
+
+    btn.addEventListener("click", () => {
+      warmStatus.style.display = "block";
+
+      // Warm backend without blocking UI
+      fetch(RENDER_HEALTH_URL, { mode: "no-cors", cache: "no-store" })
+        .catch(() => {});
+
+      // Immediately open voice agent
+      window.open(VAPI_AGENT_URL, "_blank", "noopener");
+
+      setTimeout(() => {
+        warmStatus.style.display = "none";
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
