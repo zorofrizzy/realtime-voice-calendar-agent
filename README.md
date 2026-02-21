@@ -85,5 +85,6 @@ npx serve .
 - Vercel (Frontend Hosting)
 
 ## Demo
-Screenshots and/or Loom video demonstrating:
+Loom video Demo:
+https://www.loom.com/share/3701eb4b5f864b3894b7b853dcbbba86
 
